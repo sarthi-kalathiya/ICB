@@ -13,20 +13,34 @@ public:
             return 0;
         }
 
+        string delimiter = ",";
         string modifiedNumbers = numbers;
 
-        // Replace new lines with commas
-        replace(modifiedNumbers.begin(), modifiedNumbers.end(), '\n', ',');
-
-        stringstream ss(modifiedNumbers);
-        string item;
-        int sum = 0;
-
-        while (getline(ss, item, ','))
+        // Check for custom delimiter
+        if (numbers.rfind("//", 0) == 0)
         {
-            if (!item.empty())
+            size_t delimiterEnd = numbers.find("\n");
+            if (delimiterEnd != string::npos)
             {
-                sum += stoi(item);
+                delimiter = numbers.substr(2, delimiterEnd - 2);
+                modifiedNumbers = numbers.substr(delimiterEnd + 1);
+            }
+        }
+
+        // Replace new lines with delimiter
+        replace(modifiedNumbers.begin(), modifiedNumbers.end(), '\n', delimiter[0]);
+
+        string regexStr = delimiter == "," ? "[,\n]" : "[" + delimiter + "\n]";
+        regex regexPattern(regexStr);
+        sregex_token_iterator it(modifiedNumbers.begin(), modifiedNumbers.end(), regexPattern, -1);
+        sregex_token_iterator end;
+
+        int sum = 0;
+        for (; it != end; ++it)
+        {
+            if (!it->str().empty())
+            {
+                sum += stoi(it->str());
             }
         }
 
@@ -55,6 +69,12 @@ int main()
 
     string input6 = "1\n2\n3";
     cout << "Input: \"" << input6 << "\", Output: " << calculator.add(input6) << endl;
+
+    string input7 = "//;\n1;2";
+    cout << "Input: \"" << input7 << "\", Output: " << calculator.add(input7) << endl;
+
+    string input8 = "//|\n2|3|8";
+    cout << "Input: \"" << input8 << "\", Output: " << calculator.add(input8) << endl;
 
     return 0;
 }
