@@ -36,12 +36,36 @@ public:
         sregex_token_iterator end;
 
         int sum = 0;
+        vector<int> negatives;
         for (; it != end; ++it)
         {
             if (!it->str().empty())
             {
-                sum += stoi(it->str());
+                int number = stoi(it->str());
+                if (number < 0)
+                {
+                    negatives.push_back(number);
+                }
+                else
+                {
+                    sum += number;
+                }
             }
+        }
+
+        // If there are negative numbers, throw an exception
+        if (!negatives.empty())
+        {
+            string errorMsg = "negative numbers not allowed: ";
+            for (size_t i = 0; i < negatives.size(); ++i)
+            {
+                errorMsg += to_string(negatives[i]);
+                if (i < negatives.size() - 1)
+                {
+                    errorMsg += ",";
+                }
+            }
+            throw runtime_error(errorMsg);
         }
 
         return sum;
@@ -75,6 +99,26 @@ int main()
 
     string input8 = "//|\n2|3|8";
     cout << "Input: \"" << input8 << "\", Output: " << calculator.add(input8) << endl;
+
+    string input9 = "//;\n1;-2;3";
+    try
+    {
+        cout << "Input: \"" << input9 << "\", Output: " << calculator.add(input9) << endl;
+    }
+    catch (const runtime_error &e)
+    {
+        cout << "Exception: " << e.what() << endl;
+    }
+
+    string input10 = "1,-2,-3,4";
+    try
+    {
+        cout << "Input: \"" << input10 << "\", Output: " << calculator.add(input10) << endl;
+    }
+    catch (const runtime_error &e)
+    {
+        cout << "Exception: " << e.what() << endl;
+    }
 
     return 0;
 }
