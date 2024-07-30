@@ -141,5 +141,26 @@ int main()
         cout << "Exception: " << e.what() << endl;
     }
 
+    string input13 = "10,14,15,48595";
+    cout << "Input: \"" << input13 << "\", Output: " << calculator.add(input13) << endl;
+
+    string input14 = "//[***]\n1***2***3";
+    cout << "Input: \"" << input14 << "\", Output: " << calculator.add(input14) << endl;
+
+    string input15 = "//[&&&&&]\n5&&&&&2&&&&&3";
+    cout << "Input: \"" << input15 << "\", Output: " << calculator.add(input15) << endl;
+
+    string input16 = "//[*][%]\n1*2%3";
+    cout << "Input: \"" << input16 << "\", Output: " << calculator.add(input16) << endl;
+
+    string input17 = "//['][+][*]\n1*2+3'12";
+    cout << "Input: \"" << input17 << "\", Output: " << calculator.add(input17) << endl;
+
+    string input18 = "//[***][%%]\n1***2%%3";
+    cout << "Input: \"" << input18 << "\", Output: " << calculator.add(input18) << endl;
+
+    string input19 = "//[+][&&]\n40+5&&1+1";
+    cout << "Input: \"" << input19 << "\", Output: " << calculator.add(input19) << endl;
+
     return 0;
 }
