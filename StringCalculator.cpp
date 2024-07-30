@@ -1,9 +1,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
-
 class StringCalculator
 {
 public:
@@ -14,13 +14,21 @@ public:
             return 0;
         }
 
-        stringstream ss(numbers);
+        string modifiedNumbers = numbers;
+
+        // Replace new lines with commas
+        replace(modifiedNumbers.begin(), modifiedNumbers.end(), '\n', ',');
+
+        stringstream ss(modifiedNumbers);
         string item;
         int sum = 0;
 
         while (getline(ss, item, ','))
         {
-            sum += stoi(item);
+            if (!item.empty())
+            {
+                sum += stoi(item);
+            }
         }
 
         return sum;
@@ -42,6 +50,12 @@ int main()
 
     string input4 = "1,2,3,4,5";
     cout << "Input: \"" << input4 << "\", Output: " << calculator.add(input4) << endl;
+
+    string input5 = "1\n2,3";
+    cout << "Input: \"" << input5 << "\", Output: " << calculator.add(input5) << endl;
+
+    string input6 = "1\n2\n3";
+    cout << "Input: \"" << input6 << "\", Output: " << calculator.add(input6) << endl;
 
     return 0;
 }
