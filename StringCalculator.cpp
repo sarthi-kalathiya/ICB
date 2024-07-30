@@ -13,7 +13,7 @@ public:
             return 0;
         }
 
-        string delimiter = ",";
+        vector<string> delimiters = {",", "\n"};
         string modifiedNumbers = numbers;
 
         // Check for custom delimiter
@@ -22,17 +22,39 @@ public:
             size_t delimiterEnd = numbers.find("\n");
             if (delimiterEnd != string::npos)
             {
-                delimiter = numbers.substr(2, delimiterEnd - 2);
+                string delimiterSection = numbers.substr(2, delimiterEnd - 2);
                 modifiedNumbers = numbers.substr(delimiterEnd + 1);
+                if (delimiterSection[0] == '[')
+                {
+                    regex delimiterRegex(R"(\[(.*?)\])");
+                    sregex_iterator iter(delimiterSection.begin(), delimiterSection.end(), delimiterRegex);
+                    sregex_iterator end;
+                    while (iter != end)
+                    {
+                        delimiters.push_back(iter->str(1));
+                        ++iter;
+                    }
+                }
+                else
+                {
+                    delimiters.push_back(delimiterSection);
+                }
             }
         }
 
-        // Replace new lines with delimiter
-        replace(modifiedNumbers.begin(), modifiedNumbers.end(), '\n', delimiter[0]);
+        string regexPattern = "[";
+        for (const auto &delim : delimiters)
+        {
+            for (char c : delim)
+            {
+                regexPattern += '\\';
+                regexPattern += c;
+            }
+        }
+        regexPattern += "]+";
 
-        string regexStr = delimiter == "," ? "[,\n]" : "[" + delimiter + "\n]";
-        regex regexPattern(regexStr);
-        sregex_token_iterator it(modifiedNumbers.begin(), modifiedNumbers.end(), regexPattern, -1);
+        regex regexSplit(regexPattern);
+        sregex_token_iterator it(modifiedNumbers.begin(), modifiedNumbers.end(), regexSplit, -1);
         sregex_token_iterator end;
 
         int sum = 0;
@@ -53,7 +75,6 @@ public:
             }
         }
 
-        // If there are negative numbers, throw an exception
         if (!negatives.empty())
         {
             string errorMsg = "negative numbers not allowed: ";
