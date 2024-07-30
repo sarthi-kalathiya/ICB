@@ -1,7 +1,5 @@
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <algorithm>
+// developed by sarthi kalathiya
+#include <bits/stdc++.h>
 
 using namespace std;
 class StringCalculator
@@ -9,6 +7,7 @@ class StringCalculator
 public:
     int add(const string &numbers)
     {
+        // If input is empty, return 0
         if (numbers.empty())
         {
             return 0;
